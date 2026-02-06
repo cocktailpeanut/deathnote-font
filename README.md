@@ -6,10 +6,15 @@ Generated files:
 - `DeathLedger-Italic.ttf`
 - `DeathLedger-BoldItalic.ttf`
 - `font.css`
-- `specimen.html`
+- `index.html`
 
 Coverage:
 - ASCII printable range: U+0020 to U+007E
+
+Regenerate:
+```bash
+./generator/build_font.py
+```
 
 Usage:
 ```css

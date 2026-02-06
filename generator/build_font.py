@@ -959,29 +959,60 @@ def generate_fontset(output_dir: Path) -> List[Path]:
 """
     (output_dir / "font.css").write_text(css, encoding="utf-8")
 
-    specimen = """<!doctype html>
+    index_html = """<!doctype html>
 <html lang=\"en\">
 <head>
   <meta charset=\"utf-8\" />
   <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />
-  <title>Death Ledger Specimen</title>
+  <title>Death Ledger Font Set</title>
   <link rel=\"stylesheet\" href=\"./font.css\" />
   <style>
     body {
       margin: 0;
       min-height: 100vh;
-      display: grid;
-      place-items: center;
       background: radial-gradient(circle at 20% 10%, #262626 0, #111 45%, #000 100%);
       color: #f5f5f5;
       font-family: 'Death Ledger', serif;
     }
-    .wrap { width: min(1000px, 92vw); padding: 2rem; }
+    .wrap { width: min(1000px, 92vw); margin: 0 auto; padding: 2rem; }
     h1 { margin: 0 0 1rem; font-size: clamp(3rem, 10vw, 7rem); letter-spacing: 0.03em; font-weight: 700; }
-    p { margin: 0.5rem 0; font-size: clamp(1.1rem, 2.4vw, 2rem); line-height: 1.35; letter-spacing: 0.02em; }
+    p { margin: 0.5rem 0; font-size: clamp(1.05rem, 2.2vw, 2rem); line-height: 1.35; letter-spacing: 0.02em; }
     .small { font-size: clamp(0.95rem, 1.8vw, 1.3rem); opacity: 0.9; }
     .italic { font-style: italic; }
     .bold { font-weight: 700; }
+    .panel {
+      margin-top: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(0, 0, 0, 0.45);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    h2 {
+      margin: 0 0 0.7rem;
+      font-size: clamp(1.2rem, 2.8vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+    pre {
+      margin: 0.6rem 0;
+      padding: 0.8rem;
+      overflow-x: auto;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: #fafafa;
+    }
+    ol {
+      margin: 0.4rem 0 0.7rem;
+      padding-left: 1.2rem;
+    }
+    li {
+      margin: 0.25rem 0;
+      font-size: clamp(1rem, 1.9vw, 1.2rem);
+    }
   </style>
 </head>
 <body>
@@ -992,11 +1023,22 @@ def generate_fontset(output_dir: Path) -> List[Path]:
     <p class=\"bold\">0123456789 !\"#$%&'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>
     <p class=\"bold italic\">THE NAMES WRITTEN HERE WILL DIE</p>
     <p class=\"small\">Original horror-inspired display font set generated from procedural strokes.</p>
+    <section class=\"panel\">
+      <h2>How To Use</h2>
+      <ol>
+        <li>Keep all `.ttf` files and `font.css` together in your project.</li>
+        <li>Load `font.css` in your page head.</li>
+        <li>Use `font-family: 'Death Ledger', serif;` on any element.</li>
+      </ol>
+      <pre>&lt;link rel=\"stylesheet\" href=\"./font.css\" /&gt;</pre>
+      <pre>h1 { font-family: 'Death Ledger', serif; font-weight: 700; }</pre>
+      <pre>&lt;h1&gt;The names written here will die&lt;/h1&gt;</pre>
+    </section>
   </main>
 </body>
 </html>
 """
-    (output_dir / "specimen.html").write_text(specimen, encoding="utf-8")
+    (output_dir / "index.html").write_text(index_html, encoding="utf-8")
 
     readme = """# Death Ledger Font Set
 
@@ -1006,10 +1048,15 @@ Generated files:
 - `DeathLedger-Italic.ttf`
 - `DeathLedger-BoldItalic.ttf`
 - `font.css`
-- `specimen.html`
+- `index.html`
 
 Coverage:
 - ASCII printable range: U+0020 to U+007E
+
+Regenerate:
+```bash
+./generator/build_font.py
+```
 
 Usage:
 ```css
@@ -1023,7 +1070,8 @@ This is an original design inspired by rough horror calligraphy aesthetics.
 
 
 if __name__ == "__main__":
-    out = Path("fontface-set")
+    script_dir = Path(__file__).resolve().parent
+    out = script_dir.parent if script_dir.name == "generator" else script_dir
     generated = generate_fontset(out)
     for path in generated:
         print(f"Generated: {path}")
