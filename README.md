@@ -1,6 +1,4 @@
-# Death Note Font Set
-
-![preview.png](preview.png)
+# Death Ledger Font Set
 
 Generated files:
 - `DeathLedger-Regular.ttf`
