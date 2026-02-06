@@ -1,4 +1,4 @@
-# Death Ledger Font Set
+# Death Note Font Set
 
 ![preview.png](preview.png)
 
